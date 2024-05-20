@@ -2,8 +2,15 @@ import { FastifyInstance } from "fastify"
 import { setUpKnex } from "../database/datbase"
 import { z } from "zod"
 import { randomUUID } from "crypto"
+import { checkSessionIdExist } from "../middleware/check-session-id-exists"
 
 export async function transactionsRoutes(app: FastifyInstance) {
+
+    app.addHook(
+        'preHandler', async function name(req, res) {
+            console.log(`[${req.method}], ${req.url}`)
+        }
+    )
 
     app.post("/", async (req, res) => {
 
@@ -17,7 +24,7 @@ export async function transactionsRoutes(app: FastifyInstance) {
 
         let session_id = req.cookies.session_id
 
-        if(!session_id){
+        if (!session_id) {
             session_id = randomUUID()
 
             res.cookie("session_id", session_id, {
@@ -36,26 +43,32 @@ export async function transactionsRoutes(app: FastifyInstance) {
         return res.status(201).send()
     })
 
-    app.get("/", async (req, res) => {
-        const transactions = await setUpKnex("transactions").select()
+    app.get("/", { preHandler: checkSessionIdExist }, async (req, res) => {
+        const { session_id } = req.cookies
 
-        return res.status(200).send({transactions})
+        const transactions = await setUpKnex("transactions").where("session_id", session_id).select()
+
+        return res.status(200).send({ transactions })
     })
-    app.get("/:id", async (req, res) => {
+    app.get("/:id", { preHandler: checkSessionIdExist }, async (req, res) => {
+        const { session_id } = req.cookies
+
         const getTransactionParamsSchema = z.object({
             id: z.string().uuid()
         })
 
         const { id } = getTransactionParamsSchema.parse(req.params)
 
-        const transaction = await setUpKnex("transactions").where({"id": id}).first()
+        const transaction = await setUpKnex("transactions").where({ "id": id, "session_id": session_id }).first()
 
-        return res.status(200).send({transaction})
+        return res.status(200).send({ transaction })
     })
 
-    app.get("/summary", async (req, res)=>{
-        const summary = await setUpKnex("transactions").sum('amount', {as: "amount"}).first()
+    app.get("/summary", { preHandler: checkSessionIdExist }, async (req, res) => {
+        const { session_id } = req.cookies
 
-        return res.status(200).send({summary})
+        const summary = await setUpKnex("transactions").where({ "session_id": session_id }).sum('amount', { as: "amount" }).first()
+
+        return res.status(200).send({ summary })
     })
 }
