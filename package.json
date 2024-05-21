@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "bun --watch src/server.ts",
-    "knex": "node --import tsx ./node_modules/.bin/knex"
+    "knex": "node --import tsx ./node_modules/.bin/knex",
+    "test": "bunx vitest"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +15,10 @@
     "@rocketseat/eslint-config": "^2.2.2",
     "@types/node": "^20.12.11",
     "eslint": "^9.2.0",
+    "supertest": "^7.0.0",
     "tsx": "^4.10.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   },
   "dependencies": {
     "@fastify/cookie": "^9.3.1",
