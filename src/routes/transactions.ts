@@ -8,7 +8,6 @@ export async function transactionsRoutes(app: FastifyInstance) {
 
     app.addHook(
         'preHandler', async function name(req, res) {
-            console.log(`[${req.method}], ${req.url}`)
         }
     )
 
