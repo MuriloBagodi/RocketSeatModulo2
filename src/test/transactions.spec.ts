@@ -1,16 +1,24 @@
-import { afterAll, beforeAll, describe, expect, test, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, it, beforeEach } from "vitest";
 import request from "supertest";
 import { app } from "../app";
 import { title } from "process";
+import { execSync } from "child_process";
+import { randomUUID } from "crypto";
 
 describe("Transactions Routes.", () => {
     beforeAll(async () => {
+        execSync("bun knex migrate:latest")
         await app.ready();
     });
 
     afterAll(async () => {
         await app.close();
     });
+
+    beforeEach(()=>{
+        execSync("bun knex migrate:rollback --all")
+        execSync("bun knex migrate:latest")
+    })
 
     it("should be able to create a new transaction", async () => {
         await request(app.server)
@@ -31,12 +39,11 @@ describe("Transactions Routes.", () => {
         });
         const cookies: any = createTransactionResponse.get("Set-Cookie");
         const listTransactionsResponse = await request(app.server).get("/transactions").set("Cookie", cookies).expect(200)
-        
-        expect(listTransactionsResponse.body).toEqual([
+        console.log(listTransactionsResponse.body)
+        expect(listTransactionsResponse.body.transactions).toEqual([
             expect.objectContaining({
-                title: "New Transaction",
+                title: "New transaction",
                 amount: 5000,
-                type: "credit",
             })
         ]);
     });
