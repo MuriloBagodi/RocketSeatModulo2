@@ -1,3 +1,13 @@
-/tmp/app.db
+
+## DataBase
+/tmp/*.db
+
+##Dependecies
 /node_modules
+
+##Envoiriment
 .env
+.env.test
+
+##Build
+build

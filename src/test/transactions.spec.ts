@@ -1,9 +1,7 @@
-import { afterAll, beforeAll, describe, expect, test, it, beforeEach } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, beforeEach } from "vitest";
 import request from "supertest";
 import { app } from "../app";
-import { title } from "process";
 import { execSync } from "child_process";
-import { randomUUID } from "crypto";
 
 describe("Transactions Routes.", () => {
     beforeAll(async () => {

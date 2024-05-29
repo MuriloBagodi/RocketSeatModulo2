@@ -6,7 +6,8 @@
   "scripts": {
     "start:dev": "bun --watch src/server.ts",
     "knex": "node --import tsx ./node_modules/.bin/knex",
-    "test": "bunx vitest"
+    "test": "bunx vitest",
+    "build": "tsup src --out-dir build"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "fastify": "^4.27.0",
     "knex": "^3.1.0",
     "sqlite3": "^5.1.7",
+    "tsup": "^8.0.2",
     "zod": "^3.23.8"
   }
 }
