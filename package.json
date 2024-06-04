@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {"node": ">= 18"},
   "scripts": {
     "start:dev": "bun --watch src/server.ts",
     "knex": "node --import tsx ./node_modules/.bin/knex",
@@ -27,6 +28,7 @@
     "dotenv": "^16.4.5",
     "fastify": "^4.27.0",
     "knex": "^3.1.0",
+    "pg": "^8.12.0",
     "sqlite3": "^5.1.7",
     "tsup": "^8.0.2",
     "zod": "^3.23.8"
